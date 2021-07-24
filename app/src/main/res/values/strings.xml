@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Durma no Ônibus, Acorde no Ponto</string>
+    <string name="title_home">Início</string>
+    <string name="title_new_destiny">Novo Destino</string>
+    <string name="title_alarm">Seu Alarme</string>
+    <string name="adicionar_destino">Adicionar Destino</string>
+</resources>

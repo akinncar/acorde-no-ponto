@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "Durma no Ônibus, Acorde no Ponto"
