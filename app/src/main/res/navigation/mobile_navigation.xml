@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_new_destiny"
-        android:name="br.com.acordenoponto.ui.new_destiny.NewDestinyFragment"
+        android:id="@+id/navigation_new_destination"
+        android:name="br.com.acordenoponto.ui.new_destination.NewDestinationFragment"
         android:label="@string/title_new_destiny"
-        tools:layout="@layout/fragment_new_destiny" />
+        tools:layout="@layout/fragment_new_destination" />
 
     <fragment
         android:id="@+id/navigation_notifications"

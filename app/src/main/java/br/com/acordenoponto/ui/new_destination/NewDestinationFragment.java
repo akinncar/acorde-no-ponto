@@ -1,4 +1,4 @@
-package br.com.acordenoponto.ui.new_destiny;
+package br.com.acordenoponto.ui.new_destination;
 
 import android.Manifest;
 import android.app.Activity;
@@ -26,8 +26,6 @@ import androidx.fragment.app.Fragment;
 import android.location.LocationManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -41,7 +39,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import br.com.acordenoponto.R;
 
-public class NewDestinyFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
+public class NewDestinationFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
 
     private MapView mapView;
 
@@ -56,10 +54,10 @@ public class NewDestinyFragment extends Fragment implements OnMapReadyCallback, 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_new_destiny, container, false);
+        View root = inflater.inflate(R.layout.fragment_new_destination, container, false);
 
-        Button buttonAddDestiny = root.findViewById(R.id.addDestiny);
-        buttonAddDestiny.setOnClickListener(this);
+        Button buttonAddDestination = root.findViewById(R.id.addDestination);
+        buttonAddDestination.setOnClickListener(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getContext());
 
@@ -84,12 +82,12 @@ public class NewDestinyFragment extends Fragment implements OnMapReadyCallback, 
             googleMap.addMarker(new MarkerOptions().position(latLng));
             selectedLatLng = latLng;
 
-            Button btnAddDestiny = getActivity().findViewById(R.id.addDestiny);
+            Button btnAddDestination = getActivity().findViewById(R.id.addDestination);
 
             if(selectedLatLng != null) {
-                btnAddDestiny.setVisibility(View.VISIBLE);
+                btnAddDestination.setVisibility(View.VISIBLE);
             } else {
-                btnAddDestiny.setVisibility(View.INVISIBLE);
+                btnAddDestination.setVisibility(View.INVISIBLE);
             }
             }
         });
@@ -136,14 +134,14 @@ public class NewDestinyFragment extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.addDestiny:
-                handleAddDestiny();
+            case R.id.addDestination:
+                handleAddDestination();
                 break;
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
-    public void handleAddDestiny() {
+    public void handleAddDestination() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogStyle);
         builder.setTitle("Nome do destino");
 
