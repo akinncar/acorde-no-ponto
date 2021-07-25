@@ -3,9 +3,11 @@ package br.com.acordenoponto.ui.new_destination;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Build;
@@ -26,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import android.location.LocationManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -38,6 +41,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import br.com.acordenoponto.R;
+import br.com.acordenoponto.sqlite.DestinationDbHelper;
+import br.com.acordenoponto.sqlite.Destinations;
 
 public class NewDestinationFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
 
@@ -160,8 +165,28 @@ public class NewDestinationFragment extends Fragment implements OnMapReadyCallba
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text = input.getText().toString();
+
+                DestinationDbHelper dbHelper = new DestinationDbHelper(getContext());
+
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+                ContentValues values = new ContentValues();
+                values.put(Destinations.DestinationEntry.COLUMN_NAME_TITLE, m_Text);
+                values.put(Destinations.DestinationEntry.COLUMN_NAME_LAT, selectedLatLng.latitude);
+                values.put(Destinations.DestinationEntry.COLUMN_NAME_LONG, selectedLatLng.longitude);
+
+                db.insert(Destinations.DestinationEntry.TABLE_NAME, null, values);
+
+                selectedLatLng = null;
+                googleMap.clear();
+                Button btnAddDestination = getActivity().findViewById(R.id.addDestination);
+                btnAddDestination.setVisibility(View.INVISIBLE);
+
+                Toast toast = Toast.makeText(getContext(), "Destino criado com sucesso!", Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
+
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
