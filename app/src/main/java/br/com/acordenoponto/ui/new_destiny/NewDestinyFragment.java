@@ -2,11 +2,17 @@ package br.com.acordenoponto.ui.new_destiny;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import android.location.LocationManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +41,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import br.com.acordenoponto.R;
 
-public class NewDestinyFragment extends Fragment implements OnMapReadyCallback {
+public class NewDestinyFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
 
     private MapView mapView;
 
@@ -44,12 +51,15 @@ public class NewDestinyFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng selectedLatLng;
 
+    private String m_Text = "";
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_new_destiny, container, false);
 
-        final Button buttonAddDestiny = root.findViewById(R.id.addDestiny);
+        Button buttonAddDestiny = root.findViewById(R.id.addDestiny);
+        buttonAddDestiny.setOnClickListener(this);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getContext());
 
@@ -70,17 +80,17 @@ public class NewDestinyFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                googleMap.clear();
-                googleMap.addMarker(new MarkerOptions().position(latLng));
-                selectedLatLng = latLng;
+            googleMap.clear();
+            googleMap.addMarker(new MarkerOptions().position(latLng));
+            selectedLatLng = latLng;
 
-                Button btnAddDestiny = getActivity().findViewById(R.id.addDestiny);
+            Button btnAddDestiny = getActivity().findViewById(R.id.addDestiny);
 
-                if(selectedLatLng != null) {
-                    btnAddDestiny.setVisibility(View.VISIBLE);
-                } else {
-                    btnAddDestiny.setVisibility(View.INVISIBLE);
-                }
+            if(selectedLatLng != null) {
+                btnAddDestiny.setVisibility(View.VISIBLE);
+            } else {
+                btnAddDestiny.setVisibility(View.INVISIBLE);
+            }
             }
         });
 
@@ -93,25 +103,25 @@ public class NewDestinyFragment extends Fragment implements OnMapReadyCallback {
                 this.googleMap.setMyLocationEnabled(this.showUserLocation);
 
                 fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener((Activity) this.getContext(), new OnSuccessListener<Location>() {
-                            public void onSuccess(Location location) {
-                                LatLng latLng = (new LatLng(location.getLatitude(), location.getLongitude()));
-                                Log.e("hellooo2", "hello 2");
-                                Log.e("latLng", latLng.toString());
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                                if (location != null) {
-                                    // Logic to handle location object
-                                }
-                            }
-                        });
+                    .addOnSuccessListener((Activity) this.getContext(), new OnSuccessListener<Location>() {
+                        public void onSuccess(Location location) {
+                        LatLng latLng = (new LatLng(location.getLatitude(), location.getLongitude()));
+                        Log.e("hellooo2", "hello 2");
+                        Log.e("latLng", latLng.toString());
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        if (location != null) {
+                            // Logic to handle location object
+                        }
+                        }
+                    });
 
             }
         } else {
             Log.e("helloelse", "elkse");
             ActivityCompat.requestPermissions(
-                    getActivity(),
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-                    99
+                getActivity(),
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                99
             );
         }
     }
@@ -120,5 +130,47 @@ public class NewDestinyFragment extends Fragment implements OnMapReadyCallback {
     public void onStart() {
         super.onStart();
         mapView.onStart();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.addDestiny:
+                handleAddDestiny();
+                break;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void handleAddDestiny() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogStyle);
+        builder.setTitle("Nome do destino");
+
+        final EditText input = new EditText(this.getContext());
+
+        TypedValue typedValue = new TypedValue();
+
+        TypedArray a = this.getContext().obtainStyledAttributes(typedValue.data, new int[] { R.attr.colorPrimary });
+        int color = a.getColor(0, 0);
+
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.getBackground().mutate().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        builder.setView(input);
+
+        builder.setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Text = input.getText().toString();
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 }
