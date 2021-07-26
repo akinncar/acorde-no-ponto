@@ -39,6 +39,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 
 import br.com.acordenoponto.R;
 import br.com.acordenoponto.sqlite.DestinationDbHelper;
@@ -164,28 +165,29 @@ public class NewDestinationFragment extends Fragment implements OnMapReadyCallba
         builder.setPositiveButton("Salvar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                m_Text = input.getText().toString();
+            m_Text = input.getText().toString();
 
-                DestinationDbHelper dbHelper = new DestinationDbHelper(getContext());
+            DestinationDbHelper dbHelper = new DestinationDbHelper(getContext());
 
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                ContentValues values = new ContentValues();
-                values.put(Destinations.DestinationEntry.COLUMN_NAME_TITLE, m_Text);
-                values.put(Destinations.DestinationEntry.COLUMN_NAME_LAT, selectedLatLng.latitude);
-                values.put(Destinations.DestinationEntry.COLUMN_NAME_LONG, selectedLatLng.longitude);
+            ContentValues values = new ContentValues();
+            values.put(Destinations.DestinationEntry.COLUMN_NAME_TITLE, m_Text);
+            values.put(Destinations.DestinationEntry.COLUMN_NAME_LAT, selectedLatLng.latitude);
+            values.put(Destinations.DestinationEntry.COLUMN_NAME_LONG, selectedLatLng.longitude);
 
-                db.insert(Destinations.DestinationEntry.TABLE_NAME, null, values);
+            db.insert(Destinations.DestinationEntry.TABLE_NAME, null, values);
 
-                selectedLatLng = null;
-                googleMap.clear();
-                Button btnAddDestination = getActivity().findViewById(R.id.addDestination);
-                btnAddDestination.setVisibility(View.INVISIBLE);
+            selectedLatLng = null;
+            googleMap.clear();
+            Button btnAddDestination = getActivity().findViewById(R.id.addDestination);
+            btnAddDestination.setVisibility(View.INVISIBLE);
 
-                Toast toast = Toast.makeText(getContext(), "Destino criado com sucesso!", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
+            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.mapView),
+                    "Destino criado com sucesso!", Snackbar.LENGTH_SHORT);
+            mySnackbar.show();
+        }
+    });
 
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override

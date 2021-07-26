@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.acordenoponto.R;
+import br.com.acordenoponto.adapter.AdapterDestinations;
 import br.com.acordenoponto.dto.Destination;
 import br.com.acordenoponto.sqlite.DestinationDbHelper;
 import br.com.acordenoponto.sqlite.Destinations;
@@ -29,6 +31,7 @@ import br.com.acordenoponto.sqlite.Destinations;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private List<Destination> destinations;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class HomeFragment extends Fragment {
         );
 
         List destinations = new ArrayList<Destination>();
+        this.destinations = destinations;
         while(cursor.moveToNext()) {
             Destination destination = new Destination();
 
@@ -92,9 +96,7 @@ public class HomeFragment extends Fragment {
 
         ListView destinationListView = root.findViewById(R.id.list);
 
-        ArrayAdapter<Destination> adapter = new ArrayAdapter<Destination>(
-            getContext(), android.R.layout.simple_list_item_1, destinations
-        );
+        AdapterDestinations adapter = new AdapterDestinations(destinations, this.getActivity());
 
         destinationListView.setAdapter(adapter);
 
