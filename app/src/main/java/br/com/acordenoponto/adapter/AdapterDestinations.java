@@ -50,7 +50,8 @@ public class AdapterDestinations extends BaseAdapter {
         descricao.setText(latitude + ", " + longitude);
         btnStart.setVisibility(View.VISIBLE);
         btnDelete.setVisibility(View.VISIBLE);
-        btnDelete.setOnClickListener(new View.OnClickListener(this) {
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Destination destination = destinations.get(position);
