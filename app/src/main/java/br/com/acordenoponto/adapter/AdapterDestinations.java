@@ -1,20 +1,24 @@
 package br.com.acordenoponto.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
-import java.util.Map;
 
 import br.com.acordenoponto.R;
 import br.com.acordenoponto.dto.Destination;
 import br.com.acordenoponto.sqlite.DestinationDbHelper;
 import br.com.acordenoponto.sqlite.Destinations;
+import br.com.acordenoponto.ui.home.HomeFragment;
 
 public class AdapterDestinations extends BaseAdapter {
 
@@ -63,7 +67,9 @@ public class AdapterDestinations extends BaseAdapter {
                 String[] selectionArgs = { String.valueOf(destination.getId()) };
                 db.delete(Destinations.DestinationEntry.TABLE_NAME, selection, selectionArgs);
 
-//                YourAdapterName.notifyDataSetChanged();
+                destinations.remove(position);
+
+                notifyDataSetChanged();
             }
         });
 
